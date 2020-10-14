@@ -7,7 +7,7 @@ export enum DIRECTION {
   Right = "RIGHT",
 }
 
-export const GAME_WIDTH: number = 600;
+export const GAME_WIDTH: number = 1000;
 export const GAME_HEIGHT: number = 400;
 
 export const BAT_SIDE_MARGIN: number = 20;
@@ -20,6 +20,7 @@ export const WIN_SCORE: number = 11;
 export const COLOURS = {
   BACKGROUND: "#333",
   MAIN: "#00CC00",
+  LANDSCAPE: "#FFF",
   white: "white",
 };
 

@@ -5,21 +5,24 @@ import { gameState, resetElements } from "./gameState";
 // import { collisionDetection } from "../collision/collision";
 // import { moveOpponent } from "../ai/ai";
 import Ship from "../elements/ship";
+import Landscape from "../elements/landscape";
 import {
   clearCanvas,
   drawVersionNumber,
   drawBackground,
-} from "../elements/landscape";
+} from "../elements/background";
 // import { drawScore, checkScores } from "./score";
 
 let animationRequest;
 export let ship;
+export let landscape;
 export let ctx;
 
 const drawGameElements = (): void => {
   clearCanvas();
   drawBackground();
   ship.draw();
+  landscape.draw();
   // drawScore();
   drawVersionNumber();
 };
@@ -36,6 +39,7 @@ const gameLoop = (): void => {
 export const init = (): void => {
   ctx = gameCanvas.getContext("2d");
   ship = new Ship();
+  landscape = new Landscape();
   gameState.phase = PHASE.GAME;
   if (!animationRequest) {
     startAnimation();

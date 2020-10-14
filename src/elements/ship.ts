@@ -12,9 +12,14 @@ const INITIAL_STATE = {
   dy: 0,
 };
 
+enum SPRITE_STATES {
+  FORWARD = "FORWARD",
+  BACKWARD = "BACKWARD"
+};
+
 export default class Ship {
-  height = 20;
-  width = 20;
+  height = 23;
+  width = 60;
   acceleration = 0.2;
   maxSpeed = 8;
   x = INITIAL_STATE.x;
@@ -23,9 +28,20 @@ export default class Ship {
   direction = DIRECTION.Right;
   dx = INITIAL_STATE.dx;
   dy = INITIAL_STATE.dy;
+  spriteState = SPRITE_STATES.FORWARD;
 
   draw = () => {
-    ctx.drawImage(shipImage, this.x, this.y);
+    switch(this.spriteState) {
+      case SPRITE_STATES.FORWARD: 
+        ctx.drawImage(shipImage, 0, 0, this.width, this.height, this.x, this.y, this.width, this.height);
+        break;
+      case SPRITE_STATES.BACKWARD:
+        ctx.drawImage(shipImage, this.width, 0, this.width, this.height, this.x, this.y, this.width, this.height);
+        break;
+      default:
+        break;
+    }
+
     // ctx.fillStyle = COLOURS.MAIN;
     // ctx.beginPath();
     // ctx.moveTo(this.x, this.y);
@@ -62,9 +78,11 @@ export default class Ship {
        break;
       case DIRECTION.Left:
         this.x = this.x - this.speed;
+        this.spriteState = SPRITE_STATES.BACKWARD;
         break;
       case DIRECTION.Right:
         this.x = this.x + this.speed;
+        this.spriteState = SPRITE_STATES.FORWARD;
         break;
       default:
         break;
