@@ -9,4 +9,6 @@ export const restartButton = document.getElementsByClassName(
 export const startScreen = document.getElementById(HTML_ELEMENTS.START_SCREEN);
 export const endScreen = document.getElementById(HTML_ELEMENTS.END_SCREEN);
 export const resultText = document.getElementById(HTML_ELEMENTS.RESULT_TEXT);
+export const shipImage = document.getElementById(HTML_ELEMENTS.SHIP_IMAGE);
+console.log("shipImage: ", shipImage);
 export const gameCanvas = document.getElementById("game") as HTMLCanvasElement;

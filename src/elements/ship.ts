@@ -1,5 +1,5 @@
 import { ctx } from "../gameControl/gameControl";
-
+import { shipImage } from "../common/htmlElements"
 import { COLOURS, DIRECTION, GAME_HEIGHT, GAME_WIDTH } from "../common/gameConstants";
 
 const INITIAL_STATE = {
@@ -25,12 +25,13 @@ export default class Ship {
   dy = INITIAL_STATE.dy;
 
   draw = () => {
-    ctx.fillStyle = COLOURS.MAIN;
-    ctx.beginPath();
-    ctx.moveTo(this.x, this.y);
-    ctx.lineTo(this.x + this.width, this.y + this.height / 2);
-    ctx.lineTo(this.x, this.y + this.height);
-    ctx.fill();
+    ctx.drawImage(shipImage, this.x, this.y);
+    // ctx.fillStyle = COLOURS.MAIN;
+    // ctx.beginPath();
+    // ctx.moveTo(this.x, this.y);
+    // ctx.lineTo(this.x + this.width, this.y + this.height / 2);
+    // ctx.lineTo(this.x, this.y + this.height);
+    // ctx.fill();
   };
 
   reset = () => {
