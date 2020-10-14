@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Defender Game</title>
+    <link rel="stylesheet" href="./css/game.css" />
+  </head>
+  <body>
+    <canvas id="game" width="600" height="400"></canvas>
+    <div class="infoScreen" id="startScreen">
+      <h1>AMAZING SCROLLING SHOOTER GAME</h1>
+      <p id="introText">
+        Use arrow keys to move ship. Press 'space' to shoot.
+      </p>
+      <button class="startButton">START</button>
+    </div>
+    <div class="infoScreen hide" id="endScreen">
+      <h1 id="resultText">RESULT</h1>
+      <button class="restartButton">RESTART</button>
+    </div>
+    <script src="./gameControl/gameControl.ts"></script>
+  </body>
+</html>
