@@ -6,6 +6,9 @@ import { gameState, resetElements } from "./gameState";
 // import { moveOpponent } from "../ai/ai";
 import Ship from "../elements/ship";
 import Landscape from "../elements/landscape";
+import Bullet from "../elements/bullet";
+import Camera from "../camera/camera";
+
 import {
   clearCanvas,
   drawVersionNumber,
@@ -15,20 +18,24 @@ import {
 
 let animationRequest;
 export let ship;
+export let bullet;
 export let landscape;
 export let ctx;
+export let camera;
 
 const drawGameElements = (): void => {
   clearCanvas();
   drawBackground();
-  ship.draw();
   landscape.draw();
+  ship.draw();
+  bullet.draw();
   // drawScore();
   drawVersionNumber();
 };
 
 const gameLoop = (): void => {
   ship.move();
+  bullet.move();
   // moveOpponent();
   drawGameElements();
   // collisionDetection();
@@ -38,8 +45,10 @@ const gameLoop = (): void => {
 
 export const init = (): void => {
   ctx = gameCanvas.getContext("2d");
-  ship = new Ship();
-  landscape = new Landscape();
+  camera = new Camera(0,0);
+  ship = new Ship(ctx, camera);
+  bullet = new Bullet(ctx, camera);
+  landscape = new Landscape(ctx, camera);
   gameState.phase = PHASE.GAME;
   if (!animationRequest) {
     startAnimation();

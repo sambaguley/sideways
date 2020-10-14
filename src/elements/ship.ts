@@ -1,6 +1,6 @@
-import { ctx } from "../gameControl/gameControl";
+import { bullet } from "../gameControl/gameControl";
 import { shipImage } from "../common/htmlElements"
-import { COLOURS, DIRECTION, GAME_HEIGHT, GAME_WIDTH } from "../common/gameConstants";
+import { DIRECTION, GAME_HEIGHT, GAME_WIDTH } from "../common/gameConstants";
 
 const INITIAL_STATE = {
   x: GAME_WIDTH / 2 - 5,
@@ -21,22 +21,31 @@ export default class Ship {
   height = 23;
   width = 60;
   acceleration = 0.2;
-  maxSpeed = 8;
+  maxSpeed = 6;
   x = INITIAL_STATE.x;
   y = INITIAL_STATE.y;
   speed = INITIAL_STATE.speed;
-  direction = DIRECTION.Right;
+  shipDirection = DIRECTION.Right;
+  moveDirection = null;
   dx = INITIAL_STATE.dx;
   dy = INITIAL_STATE.dy;
   spriteState = SPRITE_STATES.FORWARD;
+  ctx = null;
+  camera = null;
+  margin = 150;
+
+  constructor(ctx, camera) {
+    this.ctx = ctx;
+    this.camera = camera;
+  }
 
   draw = () => {
     switch(this.spriteState) {
       case SPRITE_STATES.FORWARD: 
-        ctx.drawImage(shipImage, 0, 0, this.width, this.height, this.x, this.y, this.width, this.height);
+        this.ctx.drawImage(shipImage, 0, 0, this.width, this.height, this.x - this.camera.x, this.y - this.camera.y, this.width, this.height);
         break;
       case SPRITE_STATES.BACKWARD:
-        ctx.drawImage(shipImage, this.width, 0, this.width, this.height, this.x, this.y, this.width, this.height);
+        this.ctx.drawImage(shipImage, this.width, 0, this.width, this.height, this.x - this.camera.x, this.y - this.camera.y, this.width, this.height);
         break;
       default:
         break;
@@ -65,24 +74,59 @@ export default class Ship {
   }
 
   changeDirection = (newDirection: DIRECTION) => {
-    this.direction = newDirection;
+    this.moveDirection = newDirection;
+    if(newDirection === DIRECTION.Right || newDirection === DIRECTION.Left) {
+      this.shipDirection = newDirection;
+    }
+  }
+
+  shoot = () => {
+    if(this.shipDirection === DIRECTION.Right) {
+      bullet.shoot(this.x + this.width, this.y + (this.height / 2) + 2, this.shipDirection);
+    } else {
+      bullet.shoot(this.x - bullet.width, this.y + (this.height / 2) + 2, this.shipDirection);
+    }
   }
 
   move = () => {
-    switch(this.direction) {
+    switch(this.moveDirection) {
       case DIRECTION.Up:
-        this.y = this.y - this.speed;
+        if(
+          this.y > 0
+        ) {
+          this.y = this.y - this.speed;
+        }
         break;
       case DIRECTION.Down:
-        this.y = this.y + this.speed;
+        if(
+          this.y < GAME_HEIGHT - 24
+        ) {
+          this.y = this.y + this.speed;
+        }
        break;
       case DIRECTION.Left:
-        this.x = this.x - this.speed;
-        this.spriteState = SPRITE_STATES.BACKWARD;
+        if(
+          this.x - this.camera.x - this.margin > 0
+        ) {
+          this.x = this.x - this.speed;
+          this.spriteState = SPRITE_STATES.BACKWARD;
+        } else {
+          this.x = this.x - this.speed;
+          this.spriteState = SPRITE_STATES.BACKWARD;
+          this.camera.move(DIRECTION.Right);
+        }
         break;
       case DIRECTION.Right:
-        this.x = this.x + this.speed;
-        this.spriteState = SPRITE_STATES.FORWARD;
+        if(
+          this.x - this.camera.x + this.margin < GAME_WIDTH - this.width
+        ) {
+          this.x = this.x + this.speed;
+          this.spriteState = SPRITE_STATES.FORWARD;
+        } else {
+          this.x = this.x + this.speed;
+          this.spriteState = SPRITE_STATES.FORWARD;
+          this.camera.move(DIRECTION.Left);
+        }
         break;
       default:
         break;

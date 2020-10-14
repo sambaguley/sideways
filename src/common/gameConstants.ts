@@ -21,6 +21,7 @@ export const COLOURS = {
   BACKGROUND: "#333",
   MAIN: "#00CC00",
   LANDSCAPE: "#FFF",
+  BULLET: "#00FF00",
   white: "white",
 };
 
@@ -35,7 +36,10 @@ export const INPUT = {
   DOWN: "ArrowDown",
   LEFT: "ArrowLeft",
   RIGHT: "ArrowRight",
-  X: "x",
+  CAMERA_LEFT: "q",
+  CAMERA_RIGHT: "w",
+  SPACE: " ",
+  X: "x"
 };
 
 export const PHASE = {
