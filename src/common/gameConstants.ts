@@ -54,5 +54,6 @@ export const HTML_ELEMENTS = {
   START_SCREEN: "startScreen",
   END_SCREEN: "endScreen",
   RESULT_TEXT: "resultText",
-  SHIP_IMAGE: "ship"
+  SHIP_IMAGE: "ship",
+  ALIEN_IMAGE: "alien"
 };

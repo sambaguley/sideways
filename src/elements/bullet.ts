@@ -5,6 +5,7 @@ export default class Bullet {
   x = null;
   y = null;
   width = 100;
+  height = 10;
   speed = 15;
   active = false;
   direction = DIRECTION.Right;

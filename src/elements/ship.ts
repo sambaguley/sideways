@@ -88,6 +88,10 @@ export default class Ship {
     }
   }
 
+  explode = () => {
+    this.y = -200;
+  }
+
   move = () => {
     switch(this.moveDirection) {
       case DIRECTION.Up:
