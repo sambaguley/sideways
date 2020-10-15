@@ -1,6 +1,6 @@
 import { bullet, bulletControl } from "../gameControl/gameControl";
 import { shipImage } from "../common/htmlElements"
-import { DIRECTION, GAME_HEIGHT, GAME_WIDTH } from "../common/gameConstants";
+import { DIRECTION, GAME_HEIGHT, GAME_WIDTH, LANDSCAPE_MIN_X, LANDSCAPE_MAX_X } from "../common/gameConstants";
 
 const INITIAL_STATE = {
   x: GAME_WIDTH / 2 - 5,
@@ -98,6 +98,7 @@ export default class Ship {
   }
 
   move = () => {
+    // console.log(this.x);
     switch(this.moveDirection) {
       case DIRECTION.Up:
         if(
@@ -114,27 +115,31 @@ export default class Ship {
         }
        break;
       case DIRECTION.Left:
-        if(
-          this.x - this.camera.x - this.margin > 0
-        ) {
-          this.x = this.x - this.speed;
-          this.spriteState = SPRITE_STATES.BACKWARD;
-        } else {
-          this.x = this.x - this.speed;
-          this.spriteState = SPRITE_STATES.BACKWARD;
-          this.camera.move(DIRECTION.Right);
+        if(this.x > LANDSCAPE_MIN_X) {
+          if(
+            this.x - this.camera.x - this.margin > 0
+          ) {
+            this.x = this.x - this.speed;
+            this.spriteState = SPRITE_STATES.BACKWARD;
+          } else {
+            this.x = this.x - this.speed;
+            this.spriteState = SPRITE_STATES.BACKWARD;
+            this.camera.move(DIRECTION.Right);
+          }
         }
         break;
       case DIRECTION.Right:
-        if(
-          this.x - this.camera.x + this.margin < GAME_WIDTH - this.width
-        ) {
-          this.x = this.x + this.speed;
-          this.spriteState = SPRITE_STATES.FORWARD;
-        } else {
-          this.x = this.x + this.speed;
-          this.spriteState = SPRITE_STATES.FORWARD;
-          this.camera.move(DIRECTION.Left);
+        if(this.x < LANDSCAPE_MAX_X) {
+          if(
+            this.x - this.camera.x + this.margin < GAME_WIDTH - this.width
+          ) {
+            this.x = this.x + this.speed;
+            this.spriteState = SPRITE_STATES.FORWARD;
+          } else {
+            this.x = this.x + this.speed;
+            this.spriteState = SPRITE_STATES.FORWARD;
+            this.camera.move(DIRECTION.Left);
+          }
         }
         break;
       default:

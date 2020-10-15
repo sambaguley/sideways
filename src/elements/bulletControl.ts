@@ -27,11 +27,9 @@ export default class BulletControl {
             }
         });
         this.bulletList = this.bulletList.filter(x => !x.removed);
-        console.log(this.bulletList);
     }
 
     draw = () => {
         this.bulletList.forEach(bullet => bullet.draw());
-        console.log(this.bulletList);
     }
 };

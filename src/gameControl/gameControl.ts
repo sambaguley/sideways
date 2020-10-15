@@ -27,6 +27,8 @@ export let ctx;
 export let camera;
 export let bulletControl;
 
+// TODO - Make this file a class
+
 export const init = (): void => {
   ctx = gameCanvas.getContext("2d");
   camera = new Camera(0,0);

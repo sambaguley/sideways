@@ -10,6 +10,9 @@ export enum DIRECTION {
 export const GAME_WIDTH: number = 1000;
 export const GAME_HEIGHT: number = 400;
 
+export const LANDSCAPE_MAX_X = 2650;
+export const LANDSCAPE_MIN_X = 0;
+
 export const BAT_SIDE_MARGIN: number = 20;
 export const BALL_RADIUS: number = 10;
 export const BAT_HEIGHT: number = 60;
