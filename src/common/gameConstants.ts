@@ -8,7 +8,7 @@ export enum DIRECTION {
 }
 
 export enum SCORES {
-  SHOOT_ALIEN = 10,
+  SHOOT_ALIEN = 1000,
 }
 
 export const GAME_WIDTH: number = 1000;
@@ -61,4 +61,5 @@ export const HTML_ELEMENTS = {
   RESULT_TEXT: "resultText",
   SHIP_IMAGE: "ship",
   ALIEN_IMAGE: "alien",
+  SCORE_RESULT: "scoreResult",
 };

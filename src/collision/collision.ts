@@ -3,9 +3,12 @@ import {
   alienControl,
   ship,
   score,
+  stopAnimation,
 } from "../gameControl/gameControl";
-
+import { showEndScreen } from "../screens/screenControl";
 import { SCORES } from "../common/gameConstants";
+import { TEXT } from "../common/gameText";
+import { scoreResult } from "../common/htmlElements";
 
 const isCollide = (a, b) => {
   if (b.x > a.x && b.x < a.x + a.width && b.y > a.y && b.y < a.y + a.height) {
@@ -28,6 +31,10 @@ export const collisionDetection = (): void => {
     if (isCollide(ship, alien)) {
       alien.explode();
       ship.explode();
+      stopAnimation();
+      showEndScreen();
+      console.log(scoreResult);
+      scoreResult.innerHTML = `${TEXT.SCORE}: ${score.score}`;
     }
   });
 };
