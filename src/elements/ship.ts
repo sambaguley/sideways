@@ -1,4 +1,4 @@
-import { bullet } from "../gameControl/gameControl";
+import { bullet, bulletControl } from "../gameControl/gameControl";
 import { shipImage } from "../common/htmlElements"
 import { DIRECTION, GAME_HEIGHT, GAME_WIDTH } from "../common/gameConstants";
 
@@ -82,9 +82,14 @@ export default class Ship {
 
   shoot = () => {
     if(this.shipDirection === DIRECTION.Right) {
-      bullet.shoot(this.x + this.width, this.y + (this.height / 2) + 2, this.shipDirection);
+      bulletControl.addBullet();
+      const { bulletList } = bulletControl;
+      // console.log("bulletList :", bulletList)
+      bulletList[bulletList.length - 1].shoot(this.x + this.width, this.y + (this.height / 2) + 2, this.shipDirection);
     } else {
-      bullet.shoot(this.x - bullet.width, this.y + (this.height / 2) + 2, this.shipDirection);
+      bulletControl.addBullet();
+      const { bulletList } = bulletControl;
+      bulletList[bulletList.length - 1].shoot(this.x - bullet.width, this.y + (this.height / 2) + 2, this.shipDirection);
     }
   }
 

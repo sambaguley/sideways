@@ -11,6 +11,7 @@ export default class Bullet {
   direction = DIRECTION.Right;
   ctx = null;
   camera = null;
+  removed = false;
 
   constructor (ctx, camera) {
     this.ctx = ctx;
@@ -26,7 +27,12 @@ export default class Bullet {
     this.ctx.stroke();
   };
 
+  remove = () => {
+    this.removed = true;
+  }
+
   shoot = (x, y, direction) => {
+    // console.log("shoot");
     this.active = true;
     this.x = x;
     this.y = y;

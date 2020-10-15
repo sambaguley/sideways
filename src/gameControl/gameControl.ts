@@ -8,6 +8,7 @@ import Ship from "../elements/ship";
 import Alien from "../elements/alien";
 import Landscape from "../elements/landscape";
 import Bullet from "../elements/bullet";
+import BulletControl from "../elements/bulletControl";
 import Camera from "../camera/camera";
 
 import {
@@ -24,12 +25,14 @@ export let bullet;
 export let landscape;
 export let ctx;
 export let camera;
+export let bulletControl;
 
 export const init = (): void => {
   ctx = gameCanvas.getContext("2d");
   camera = new Camera(0,0);
   ship = new Ship(ctx, camera);
   bullet = new Bullet(ctx, camera);
+  bulletControl = new BulletControl(ctx, camera);
   landscape = new Landscape(ctx, camera);
   alien = new Alien(ctx, camera);
   gameState.phase = PHASE.GAME;
@@ -44,7 +47,7 @@ const drawGameElements = (): void => {
   landscape.draw();
   ship.draw();
   alien.draw();
-  bullet.draw();
+  bulletControl.draw();
   // drawScore();
   drawVersionNumber();
 };
@@ -52,7 +55,7 @@ const drawGameElements = (): void => {
 const gameLoop = (): void => {
   ship.move();
   alien.move();
-  bullet.move();
+  bulletControl.move();
   drawGameElements();
   collisionDetection();
   // checkScores();

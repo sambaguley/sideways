@@ -1,4 +1,4 @@
-export const VERSION_NUMBER: string = "0.1";
+export const VERSION_NUMBER: string = "0.2";
 
 export enum DIRECTION {
   Up = "UP",
@@ -36,8 +36,6 @@ export const INPUT = {
   DOWN: "ArrowDown",
   LEFT: "ArrowLeft",
   RIGHT: "ArrowRight",
-  CAMERA_LEFT: "q",
-  CAMERA_RIGHT: "w",
   SPACE: " ",
   X: "x"
 };

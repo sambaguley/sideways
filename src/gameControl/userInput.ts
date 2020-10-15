@@ -1,10 +1,10 @@
 import { startButton, restartButton } from "../common/htmlElements";
 import { DIRECTION, INPUT, PHASE } from "../common/gameConstants";
-import { init, camera, ship } from "./gameControl";
+import { init, ship } from "./gameControl";
 import { hideStartScreen, hideEndScreen } from "../screens/screenControl";
 import { gameState } from "./gameState";
 
-const detectKeyPress = ({ key }: { key: string }): void => {
+const detectKeyDownPress = (key: string): void => {
   if (gameState.phase == PHASE.GAME) {
     switch(key) {
 
@@ -28,26 +28,38 @@ const detectKeyPress = ({ key }: { key: string }): void => {
       case INPUT.SPACE:
         ship.shoot();
       break;
+    }
+  }
+};
 
-      // CAMERA
-      case INPUT.CAMERA_LEFT:
-        camera.move(DIRECTION.Left)
-      break;
-      case INPUT.CAMERA_RIGHT:
-        camera.move(DIRECTION.Right)
-      break;
+const detectKeyUpPress = (key: string): void => {
+  // console.log(key);
+  if (gameState.phase == PHASE.GAME) {
 
-
+    if(key === INPUT.UP && ship.moveDirection === DIRECTION.Up) {
+      ship.stop();
+    }
+    if(key === INPUT.DOWN && ship.moveDirection === DIRECTION.Down) {
+      ship.stop();
+    }
+    if(key === INPUT.RIGHT && ship.moveDirection === DIRECTION.Right) {
+      ship.stop();
+    }
+    if(key === INPUT.LEFT && ship.moveDirection === DIRECTION.Left) {
+      ship.stop();
     }
   }
 };
 
 export const initUserInput = () => {
+
   document.addEventListener("keydown", (e) => {
-    detectKeyPress(e);
+    const { key } = e; 
+    detectKeyDownPress(key);
   });
   document.addEventListener("keyup", (e) => {
-    ship.stop(e);
+    const { key } = e;
+    detectKeyUpPress(key);
   });
 
   startButton.addEventListener("mousedown", () => {

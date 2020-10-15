@@ -1,4 +1,4 @@
-import { bullet, alien, ship } from "../gameControl/gameControl";
+import { bulletControl, alien, ship } from "../gameControl/gameControl";
 
 const isCollide = (a,b) => {
   if(b.x > a.x 
@@ -11,10 +11,12 @@ const isCollide = (a,b) => {
 };
 
 export const collisionDetection = (): void => {
-  if(isCollide(alien, bullet)) {
-    alien.explode();
-    alien.spawn();
-  }
+  bulletControl.bulletList.forEach(bullet => {
+    if(isCollide(alien, bullet)) {
+      alien.explode();
+      alien.spawn();
+    }
+  })
   if(isCollide(ship, alien)) {
     alien.explode();
     ship.explode();
