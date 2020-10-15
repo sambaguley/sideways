@@ -5,10 +5,10 @@ import { gameState, resetElements } from "./gameState";
 import { collisionDetection } from "../collision/collision";
 // import { moveOpponent } from "../ai/ai";
 import Ship from "../elements/ship";
-import Alien from "../elements/alien";
 import Landscape from "../elements/landscape";
 import Bullet from "../elements/bullet";
 import BulletControl from "../elements/bulletControl";
+import AlienControl from "../elements/alienControl";
 import Camera from "../camera/camera";
 
 import {
@@ -26,6 +26,7 @@ export let landscape;
 export let ctx;
 export let camera;
 export let bulletControl;
+export let alienControl;
 
 // TODO - Make this file a class
 
@@ -35,8 +36,9 @@ export const init = (): void => {
   ship = new Ship(ctx, camera);
   bullet = new Bullet(ctx, camera);
   bulletControl = new BulletControl(ctx, camera);
+  alienControl = new AlienControl(ctx, camera);
+  alienControl.startSpawn();
   landscape = new Landscape(ctx, camera);
-  alien = new Alien(ctx, camera);
   gameState.phase = PHASE.GAME;
   if (!animationRequest) {
     startAnimation();
@@ -48,7 +50,7 @@ const drawGameElements = (): void => {
   drawBackground();
   landscape.draw();
   ship.draw();
-  alien.draw();
+  alienControl.draw();
   bulletControl.draw();
   // drawScore();
   drawVersionNumber();
@@ -56,7 +58,7 @@ const drawGameElements = (): void => {
 
 const gameLoop = (): void => {
   ship.move();
-  alien.move();
+  alienControl.move();
   bulletControl.move();
   drawGameElements();
   collisionDetection();

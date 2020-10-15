@@ -11,25 +11,29 @@ import { gameState } from "./gameState";
 import { stopAnimation, ctx } from "./gameControl";
 import { showEndScreen } from "../screens/screenControl";
 
-export const checkScores = (): void => {
-  if (gameState.score.player1 >= WIN_SCORE) {
-    stopAnimation();
-    showEndScreen();
-    gameState.phase = PHASE.END;
-    resultText.innerHTML = TEXT.WIN;
-  } else if (gameState.score.player2 >= WIN_SCORE) {
-    stopAnimation();
-    showEndScreen();
-    gameState.phase = PHASE.END;
-    resultText.innerHTML = TEXT.LOSE;
-  }
-};
+class Score {
+  score = 0;
 
-export const drawScore = (): void => {
-  ctx.strokeStyle = COLOURS.white;
-  ctx.font = FONTS.SCORE;
-  ctx.textAlign = "right";
-  ctx.fillText(gameState.score.player1, GAME_WIDTH / 2 - 20, 60);
-  ctx.textAlign = "left";
-  ctx.fillText(gameState.score.player2, GAME_WIDTH / 2 + 20, 60);
-};
+  check = (): void => {
+    if (gameState.score.player1 >= WIN_SCORE) {
+      stopAnimation();
+      showEndScreen();
+      gameState.phase = PHASE.END;
+      resultText.innerHTML = TEXT.WIN;
+    } else if (gameState.score.player2 >= WIN_SCORE) {
+      stopAnimation();
+      showEndScreen();
+      gameState.phase = PHASE.END;
+      resultText.innerHTML = TEXT.LOSE;
+    }
+  };
+
+  draw = (): void => {
+    ctx.strokeStyle = COLOURS.white;
+    ctx.font = FONTS.SCORE;
+    ctx.textAlign = "right";
+    ctx.fillText(gameState.score.player1, GAME_WIDTH / 2 - 20, 60);
+    ctx.textAlign = "left";
+    ctx.fillText(gameState.score.player2, GAME_WIDTH / 2 + 20, 60);
+  };
+}
