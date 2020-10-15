@@ -110,7 +110,6 @@ export default class Ship {
     if (this.shipDirection === DIRECTION.Right) {
       bulletControl.addBullet();
       const { bulletList } = bulletControl;
-      // console.log("bulletList :", bulletList)
       bulletList[bulletList.length - 1].shoot(
         this.x + this.width,
         this.y + this.height / 2 + 2,
@@ -132,7 +131,6 @@ export default class Ship {
   };
 
   move = () => {
-    // console.log(this.x);
     switch (this.moveDirection) {
       case DIRECTION.Up:
         if (this.y > 0) {

@@ -33,7 +33,6 @@ export const collisionDetection = (): void => {
       ship.explode();
       stopAnimation();
       showEndScreen();
-      console.log(scoreResult);
       scoreResult.innerHTML = `${TEXT.SCORE}: ${score.score}`;
     }
   });

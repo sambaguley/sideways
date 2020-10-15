@@ -32,7 +32,6 @@ const detectKeyDownPress = (key: string): void => {
 };
 
 const detectKeyUpPress = (key: string): void => {
-  // console.log(key);
   if (gameState.phase == PHASE.GAME) {
     if (key === INPUT.UP && ship.moveDirection === DIRECTION.Up) {
       ship.stop();

@@ -32,7 +32,6 @@ export default class Bullet {
   };
 
   shoot = (x, y, direction) => {
-    // console.log("shoot");
     this.active = true;
     this.x = x;
     this.y = y;

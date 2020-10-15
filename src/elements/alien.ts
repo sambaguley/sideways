@@ -16,7 +16,7 @@ const INITIAL_STATE = {
 export default class Alien {
   height = 23;
   width = 26;
-  x = INITIAL_STATE.x;
+  x = Math.random() * LANDSCAPE_MAX_X;
   y = (Math.random() * GAME_HEIGHT) / 2;
   speed = INITIAL_STATE.speed;
   direction = DIRECTION.Right;
