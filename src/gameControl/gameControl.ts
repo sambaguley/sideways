@@ -32,7 +32,7 @@ export let alienControl;
 
 export const init = (): void => {
   ctx = gameCanvas.getContext("2d");
-  camera = new Camera(0,0);
+  camera = new Camera(0, 0);
   ship = new Ship(ctx, camera);
   bullet = new Bullet(ctx, camera);
   bulletControl = new BulletControl(ctx, camera);

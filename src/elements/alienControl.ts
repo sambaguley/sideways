@@ -1,4 +1,3 @@
-import { GAME_WIDTH } from "../common/gameConstants";
 import Alien from "./alien";
 
 const ALIEN_SPAWN_INTERVAL = 2000;

@@ -1,6 +1,12 @@
 import { bullet, bulletControl } from "../gameControl/gameControl";
-import { shipImage } from "../common/htmlElements"
-import { DIRECTION, GAME_HEIGHT, GAME_WIDTH, LANDSCAPE_MIN_X, LANDSCAPE_MAX_X } from "../common/gameConstants";
+import { shipImage } from "../common/htmlElements";
+import {
+  DIRECTION,
+  GAME_HEIGHT,
+  GAME_WIDTH,
+  LANDSCAPE_MIN_X,
+  LANDSCAPE_MAX_X,
+} from "../common/gameConstants";
 
 const INITIAL_STATE = {
   x: GAME_WIDTH / 2 - 5,
@@ -14,8 +20,8 @@ const INITIAL_STATE = {
 
 enum SPRITE_STATES {
   FORWARD = "FORWARD",
-  BACKWARD = "BACKWARD"
-};
+  BACKWARD = "BACKWARD",
+}
 
 export default class Ship {
   height = 23;
@@ -40,12 +46,32 @@ export default class Ship {
   }
 
   draw = () => {
-    switch(this.spriteState) {
-      case SPRITE_STATES.FORWARD: 
-        this.ctx.drawImage(shipImage, 0, 0, this.width, this.height, this.x - this.camera.x, this.y - this.camera.y, this.width, this.height);
+    switch (this.spriteState) {
+      case SPRITE_STATES.FORWARD:
+        this.ctx.drawImage(
+          shipImage,
+          0,
+          0,
+          this.width,
+          this.height,
+          this.x - this.camera.x,
+          this.y - this.camera.y,
+          this.width,
+          this.height
+        );
         break;
       case SPRITE_STATES.BACKWARD:
-        this.ctx.drawImage(shipImage, this.width, 0, this.width, this.height, this.x - this.camera.x, this.y - this.camera.y, this.width, this.height);
+        this.ctx.drawImage(
+          shipImage,
+          this.width,
+          0,
+          this.width,
+          this.height,
+          this.x - this.camera.x,
+          this.y - this.camera.y,
+          this.width,
+          this.height
+        );
         break;
       default:
         break;
@@ -68,57 +94,59 @@ export default class Ship {
   };
 
   setSpeed = (speed) => {
-    if(speed === "max") {
+    if (speed === "max") {
       this.speed = INITIAL_STATE.maxSpeed;
     }
-  }
+  };
 
   changeDirection = (newDirection: DIRECTION) => {
     this.moveDirection = newDirection;
-    if(newDirection === DIRECTION.Right || newDirection === DIRECTION.Left) {
+    if (newDirection === DIRECTION.Right || newDirection === DIRECTION.Left) {
       this.shipDirection = newDirection;
     }
-  }
+  };
 
   shoot = () => {
-    if(this.shipDirection === DIRECTION.Right) {
+    if (this.shipDirection === DIRECTION.Right) {
       bulletControl.addBullet();
       const { bulletList } = bulletControl;
       // console.log("bulletList :", bulletList)
-      bulletList[bulletList.length - 1].shoot(this.x + this.width, this.y + (this.height / 2) + 2, this.shipDirection);
+      bulletList[bulletList.length - 1].shoot(
+        this.x + this.width,
+        this.y + this.height / 2 + 2,
+        this.shipDirection
+      );
     } else {
       bulletControl.addBullet();
       const { bulletList } = bulletControl;
-      bulletList[bulletList.length - 1].shoot(this.x - bullet.width, this.y + (this.height / 2) + 2, this.shipDirection);
+      bulletList[bulletList.length - 1].shoot(
+        this.x - bullet.width,
+        this.y + this.height / 2 + 2,
+        this.shipDirection
+      );
     }
-  }
+  };
 
   explode = () => {
     this.y = -200;
-  }
+  };
 
   move = () => {
     // console.log(this.x);
-    switch(this.moveDirection) {
+    switch (this.moveDirection) {
       case DIRECTION.Up:
-        if(
-          this.y > 0
-        ) {
+        if (this.y > 0) {
           this.y = this.y - this.speed;
         }
         break;
       case DIRECTION.Down:
-        if(
-          this.y < GAME_HEIGHT - 24
-        ) {
+        if (this.y < GAME_HEIGHT - 24) {
           this.y = this.y + this.speed;
         }
-       break;
+        break;
       case DIRECTION.Left:
-        if(this.x > LANDSCAPE_MIN_X) {
-          if(
-            this.x - this.camera.x - this.margin > 0
-          ) {
+        if (this.x > LANDSCAPE_MIN_X) {
+          if (this.x - this.camera.x - this.margin > 0) {
             this.x = this.x - this.speed;
             this.spriteState = SPRITE_STATES.BACKWARD;
           } else {
@@ -129,10 +157,8 @@ export default class Ship {
         }
         break;
       case DIRECTION.Right:
-        if(this.x < LANDSCAPE_MAX_X) {
-          if(
-            this.x - this.camera.x + this.margin < GAME_WIDTH - this.width
-          ) {
+        if (this.x < LANDSCAPE_MAX_X) {
+          if (this.x - this.camera.x + this.margin < GAME_WIDTH - this.width) {
             this.x = this.x + this.speed;
             this.spriteState = SPRITE_STATES.FORWARD;
           } else {
@@ -145,9 +171,9 @@ export default class Ship {
       default:
         break;
     }
-  }
+  };
 
   stop = () => {
     this.speed = 0;
-  }
+  };
 }

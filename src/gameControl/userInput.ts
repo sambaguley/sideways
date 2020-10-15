@@ -6,28 +6,27 @@ import { gameState } from "./gameState";
 
 const detectKeyDownPress = (key: string): void => {
   if (gameState.phase == PHASE.GAME) {
-    switch(key) {
-
+    switch (key) {
       // SHIP
       case INPUT.UP:
         ship.setSpeed("max");
         ship.changeDirection(DIRECTION.Up);
-      break;
+        break;
       case INPUT.DOWN:
         ship.setSpeed("max");
         ship.changeDirection(DIRECTION.Down);
-      break;
+        break;
       case INPUT.RIGHT:
         ship.setSpeed("max");
         ship.changeDirection(DIRECTION.Right);
-      break;
+        break;
       case INPUT.LEFT:
         ship.setSpeed("max");
         ship.changeDirection(DIRECTION.Left);
-      break;
+        break;
       case INPUT.SPACE:
         ship.shoot();
-      break;
+        break;
     }
   }
 };
@@ -35,26 +34,24 @@ const detectKeyDownPress = (key: string): void => {
 const detectKeyUpPress = (key: string): void => {
   // console.log(key);
   if (gameState.phase == PHASE.GAME) {
-
-    if(key === INPUT.UP && ship.moveDirection === DIRECTION.Up) {
+    if (key === INPUT.UP && ship.moveDirection === DIRECTION.Up) {
       ship.stop();
     }
-    if(key === INPUT.DOWN && ship.moveDirection === DIRECTION.Down) {
+    if (key === INPUT.DOWN && ship.moveDirection === DIRECTION.Down) {
       ship.stop();
     }
-    if(key === INPUT.RIGHT && ship.moveDirection === DIRECTION.Right) {
+    if (key === INPUT.RIGHT && ship.moveDirection === DIRECTION.Right) {
       ship.stop();
     }
-    if(key === INPUT.LEFT && ship.moveDirection === DIRECTION.Left) {
+    if (key === INPUT.LEFT && ship.moveDirection === DIRECTION.Left) {
       ship.stop();
     }
   }
 };
 
 export const initUserInput = () => {
-
   document.addEventListener("keydown", (e) => {
-    const { key } = e; 
+    const { key } = e;
     detectKeyDownPress(key);
   });
   document.addEventListener("keyup", (e) => {

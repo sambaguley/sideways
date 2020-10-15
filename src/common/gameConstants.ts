@@ -40,7 +40,7 @@ export const INPUT = {
   LEFT: "ArrowLeft",
   RIGHT: "ArrowRight",
   SPACE: " ",
-  X: "x"
+  X: "x",
 };
 
 export const PHASE = {
@@ -56,5 +56,5 @@ export const HTML_ELEMENTS = {
   END_SCREEN: "endScreen",
   RESULT_TEXT: "resultText",
   SHIP_IMAGE: "ship",
-  ALIEN_IMAGE: "alien"
+  ALIEN_IMAGE: "alien",
 };

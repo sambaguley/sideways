@@ -13,7 +13,7 @@ export default class Bullet {
   camera = null;
   removed = false;
 
-  constructor (ctx, camera) {
+  constructor(ctx, camera) {
     this.ctx = ctx;
     this.camera = camera;
   }
@@ -22,14 +22,14 @@ export default class Bullet {
     this.ctx.strokeStyle = COLOURS.BULLET;
     this.ctx.lineWidth = this.lineWidth;
     this.ctx.beginPath();
-    this.ctx.moveTo(this.x -this.camera.x, this.y);
-    this.ctx.lineTo(this.x + this.width -this.camera.x, this.y);
+    this.ctx.moveTo(this.x - this.camera.x, this.y);
+    this.ctx.lineTo(this.x + this.width - this.camera.x, this.y);
     this.ctx.stroke();
   };
 
   remove = () => {
     this.removed = true;
-  }
+  };
 
   shoot = (x, y, direction) => {
     // console.log("shoot");
@@ -37,15 +37,15 @@ export default class Bullet {
     this.x = x;
     this.y = y;
     this.direction = direction;
-  }
+  };
 
   move = () => {
-    if(this.active) {
-        if(this.direction === DIRECTION.Right) {
-            this.x = this.x + this.speed;
-        } else {
-            this.x = this.x - this.speed;
-        }
+    if (this.active) {
+      if (this.direction === DIRECTION.Right) {
+        this.x = this.x + this.speed;
+      } else {
+        this.x = this.x - this.speed;
+      }
     }
-  }
+  };
 }
