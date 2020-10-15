@@ -1,10 +1,14 @@
-export const VERSION_NUMBER: string = "0.2";
+export const VERSION_NUMBER: string = "0.3";
 
 export enum DIRECTION {
   Up = "UP",
   Down = "DOWN",
   Left = "LEFT",
   Right = "RIGHT",
+}
+
+export enum SCORES {
+  SHOOT_ALIEN = 10,
 }
 
 export const GAME_WIDTH: number = 1000;
@@ -30,7 +34,7 @@ export const COLOURS = {
 
 export const FONTS = {
   TITLE: "30px arial",
-  SCORE: "60px arial",
+  SCORE: "20px arial",
   SMALL: "12px arial",
 };
 

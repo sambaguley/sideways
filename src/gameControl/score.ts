@@ -1,39 +1,27 @@
-import {
-  WIN_SCORE,
-  PHASE,
-  COLOURS,
-  GAME_WIDTH,
-  FONTS,
-} from "../common/gameConstants";
+import { COLOURS, FONTS, GAME_WIDTH } from "../common/gameConstants";
+
 import { TEXT } from "../common/gameText";
-import { resultText } from "../common/htmlElements";
-import { gameState } from "./gameState";
-import { stopAnimation, ctx } from "./gameControl";
-import { showEndScreen } from "../screens/screenControl";
 
-class Score {
+export default class Score {
   score = 0;
+  ctx = null;
 
-  check = (): void => {
-    if (gameState.score.player1 >= WIN_SCORE) {
-      stopAnimation();
-      showEndScreen();
-      gameState.phase = PHASE.END;
-      resultText.innerHTML = TEXT.WIN;
-    } else if (gameState.score.player2 >= WIN_SCORE) {
-      stopAnimation();
-      showEndScreen();
-      gameState.phase = PHASE.END;
-      resultText.innerHTML = TEXT.LOSE;
-    }
+  constructor(ctx) {
+    this.ctx = ctx;
+  }
+
+  increase = (amount) => {
+    this.score += amount;
   };
 
   draw = (): void => {
-    ctx.strokeStyle = COLOURS.white;
-    ctx.font = FONTS.SCORE;
-    ctx.textAlign = "right";
-    ctx.fillText(gameState.score.player1, GAME_WIDTH / 2 - 20, 60);
-    ctx.textAlign = "left";
-    ctx.fillText(gameState.score.player2, GAME_WIDTH / 2 + 20, 60);
+    this.ctx.fillStyle = COLOURS.white;
+    this.ctx.font = FONTS.SCORE;
+    this.ctx.textAlign = "center";
+    this.ctx.fillText(
+      `${TEXT.SCORE}: ${this.score.toString()}`,
+      GAME_WIDTH / 2,
+      40
+    );
   };
 }
