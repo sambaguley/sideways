@@ -2,13 +2,14 @@ import { alienImage } from "../common/htmlElements";
 import {
   DIRECTION,
   GAME_HEIGHT,
+  GAME_WIDTH,
   LANDSCAPE_MAX_X,
 } from "../common/gameConstants";
 import { camera } from "../gameControl/gameControl";
 
 const INITIAL_STATE = {
   x: LANDSCAPE_MAX_X,
-  speed: 3,
+  speed: 0.5,
   maxSpeed: 8,
   direction: DIRECTION.Right,
 };
@@ -17,7 +18,7 @@ export default class Alien {
   height = 23;
   width = 26;
   x = Math.random() * LANDSCAPE_MAX_X;
-  y = (Math.random() * GAME_HEIGHT) / 2;
+  y = -10;
   speed = INITIAL_STATE.speed;
   direction = DIRECTION.Right;
   moveDirection = null;
@@ -39,13 +40,16 @@ export default class Alien {
   };
 
   spawn = () => {
-    this.x = LANDSCAPE_MAX_X;
-    this.y = (Math.random() * GAME_HEIGHT) / 2;
+    this.x = (Math.random() * GAME_WIDTH) / 2;
+    this.y = -10;
     this.speed = INITIAL_STATE.speed;
   };
 
-  move = () => {
-    this.x = this.x - this.speed;
+  update = () => {
+    this.y = this.y + this.speed;
+    if (this.y > GAME_HEIGHT) {
+      this.remove();
+    }
   };
 
   explode = () => {

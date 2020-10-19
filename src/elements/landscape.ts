@@ -46,7 +46,7 @@ export default class Landscape {
 
   star = (starNumber) => {
     const [x, y] = this.stars[starNumber] ?? [0, 0];
-    this.ctx.fillRect(x, y, 2, 2);
+    this.ctx.fillRect(x - this.camera.x, y, 2, 2);
   };
 
   draw = () => {

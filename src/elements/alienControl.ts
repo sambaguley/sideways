@@ -25,9 +25,9 @@ export default class AlienControl {
     this.alienList.push(new Alien(this.ctx, this.camera));
   };
 
-  move = () => {
+  update = () => {
     this.alienList.forEach((alien) => {
-      alien.move();
+      alien.update();
       if (alien.x - this.camera.x < 0) {
         alien.remove();
       }

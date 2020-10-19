@@ -65,7 +65,7 @@ const drawGameElements = (): void => {
 
 const gameLoop = (): void => {
   ship.update();
-  alienControl.move();
+  alienControl.update();
   bulletControl.move();
   drawGameElements();
   collisionDetection();
