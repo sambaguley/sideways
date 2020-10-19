@@ -1,10 +1,15 @@
-export const VERSION_NUMBER: string = "0.3";
+export const VERSION_NUMBER: string = "0.4";
 
 export enum DIRECTION {
   Up = "UP",
   Down = "DOWN",
   Left = "LEFT",
   Right = "RIGHT",
+}
+
+export enum ACCELERATION_LEVELS {
+  MIN = 0,
+  MAX = 0.8,
 }
 
 export enum SCORES {

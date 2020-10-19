@@ -1,7 +1,11 @@
 import { startButton, restartButton } from "../common/htmlElements";
-import { DIRECTION, INPUT, PHASE } from "../common/gameConstants";
-import { init, ship } from "./gameControl";
-import { ACCELERATION_LEVELS } from "../elements/ship";
+import {
+  DIRECTION,
+  INPUT,
+  PHASE,
+  ACCELERATION_LEVELS,
+} from "../common/gameConstants";
+import { init, ship, camera } from "./gameControl";
 import { hideStartScreen, hideEndScreen } from "../screens/screenControl";
 import { gameState } from "./gameState";
 
@@ -36,15 +40,21 @@ const detectKeyUpPress = (key: string): void => {
   if (gameState.phase == PHASE.GAME) {
     if (key === INPUT.UP && ship.moveDirection === DIRECTION.Up) {
       ship.setAcceleration(ACCELERATION_LEVELS.MIN);
+      // camera.setAcceleration(ACCELERATION_LEVELS.MIN);
     }
     if (key === INPUT.DOWN && ship.moveDirection === DIRECTION.Down) {
       ship.setAcceleration(ACCELERATION_LEVELS.MIN);
+      // camera.setAcceleration(ACCELERATION_LEVELS.MIN);
     }
     if (key === INPUT.RIGHT && ship.moveDirection === DIRECTION.Right) {
       ship.setAcceleration(ACCELERATION_LEVELS.MIN);
+      // camera.setAcceleration(ACCELERATION_LEVELS.MIN);
+      console.log("check");
     }
     if (key === INPUT.LEFT && ship.moveDirection === DIRECTION.Left) {
       ship.setAcceleration(ACCELERATION_LEVELS.MIN);
+      // camera.setAcceleration(ACCELERATION_LEVELS.MIN);
+      console.log("check");
     }
   }
 };

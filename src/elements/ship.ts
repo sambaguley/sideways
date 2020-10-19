@@ -6,6 +6,7 @@ import {
   GAME_WIDTH,
   LANDSCAPE_MIN_X,
   LANDSCAPE_MAX_X,
+  ACCELERATION_LEVELS,
 } from "../common/gameConstants";
 
 const INITIAL_STATE = {
@@ -21,11 +22,6 @@ const INITIAL_STATE = {
 enum SPRITE_STATES {
   FORWARD = "FORWARD",
   BACKWARD = "BACKWARD",
-}
-
-export enum ACCELERATION_LEVELS {
-  MIN = 0,
-  MAX = 0.8,
 }
 
 export default class Ship {
@@ -82,13 +78,6 @@ export default class Ship {
       default:
         break;
     }
-
-    // ctx.fillStyle = COLOURS.MAIN;
-    // ctx.beginPath();
-    // ctx.moveTo(this.x, this.y);
-    // ctx.lineTo(this.x + this.width, this.y + this.height / 2);
-    // ctx.lineTo(this.x, this.y + this.height);
-    // ctx.fill();
   };
 
   reset = () => {
@@ -146,43 +135,42 @@ export default class Ship {
       Math.max(this.speed + this._acceleration - this._friction, 0),
       this.maxSpeed
     );
-    switch (this.moveDirection) {
-      case DIRECTION.Up:
-        if (this.y > 0) {
-          this.y = this.y - this.speed;
-        }
-        break;
-      case DIRECTION.Down:
-        if (this.y < GAME_HEIGHT - 24) {
-          this.y = this.y + this.speed;
-        }
-        break;
-      case DIRECTION.Left:
-        if (this.x > LANDSCAPE_MIN_X) {
-          if (this.x - this.camera.x - this.margin > 0) {
-            this.x = this.x - this.speed;
-            this.spriteState = SPRITE_STATES.BACKWARD;
-          } else {
-            this.x = this.x - this.speed;
-            this.spriteState = SPRITE_STATES.BACKWARD;
-            this.camera.move(DIRECTION.Right);
+    if (this.speed > 0) {
+      switch (this.moveDirection) {
+        case DIRECTION.Up:
+          if (this.y > 0) {
+            this.y = this.y - this.speed;
           }
-        }
-        break;
-      case DIRECTION.Right:
-        if (this.x < LANDSCAPE_MAX_X) {
-          if (this.x - this.camera.x + this.margin < GAME_WIDTH - this.width) {
-            this.x = this.x + this.speed;
-            this.spriteState = SPRITE_STATES.FORWARD;
-          } else {
-            this.x = this.x + this.speed;
-            this.spriteState = SPRITE_STATES.FORWARD;
-            this.camera.move(DIRECTION.Left);
+          break;
+        case DIRECTION.Down:
+          if (this.y < GAME_HEIGHT - 24) {
+            this.y = this.y + this.speed;
           }
-        }
-        break;
-      default:
-        break;
+          break;
+        case DIRECTION.Left:
+          this.spriteState = SPRITE_STATES.BACKWARD;
+          if (this.x > LANDSCAPE_MIN_X) {
+            this.x = this.x - this.speed;
+            if (this.x - this.camera.x - this.margin < 0) {
+              this.camera.followShip(-this.speed);
+            }
+          }
+          break;
+        case DIRECTION.Right:
+          this.spriteState = SPRITE_STATES.FORWARD;
+          if (this.x < LANDSCAPE_MAX_X) {
+            this.x = this.x + this.speed;
+            if (
+              this.x - this.camera.x + this.margin >
+              GAME_WIDTH - this.width
+            ) {
+              this.camera.followShip(this.speed);
+            }
+          }
+          break;
+        default:
+          break;
+      }
     }
   };
 
