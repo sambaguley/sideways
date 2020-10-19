@@ -4,6 +4,7 @@ import {
   ship,
   score,
   stopAnimation,
+  lives,
 } from "../gameControl/gameControl";
 import { showEndScreen } from "../screens/screenControl";
 import { SCORES } from "../common/gameConstants";
@@ -31,8 +32,11 @@ export const collisionDetection = (): void => {
     if (isCollide(ship, alien)) {
       alien.explode();
       ship.explode();
-      stopAnimation();
-      showEndScreen();
+      lives.decrease();
+      if (lives.lives < 1) {
+        stopAnimation();
+        showEndScreen();
+      }
       scoreResult.innerHTML = `${TEXT.SCORE}: ${score.score}`;
     }
   });

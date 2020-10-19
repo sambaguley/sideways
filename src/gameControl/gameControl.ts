@@ -11,6 +11,7 @@ import BulletControl from "../elements/bulletControl";
 import AlienControl from "../elements/alienControl";
 import Camera from "../camera/camera";
 import Score from "./score";
+import Lives from "./lives";
 
 import {
   clearCanvas,
@@ -21,6 +22,7 @@ import {
 
 let animationRequest;
 export let score;
+export let lives;
 export let ship;
 export let alien;
 export let bullet;
@@ -40,6 +42,7 @@ export const init = (): void => {
   bulletControl = new BulletControl(ctx, camera);
   alienControl = new AlienControl(ctx, camera);
   score = new Score(ctx);
+  lives = new Lives(ctx);
   alienControl.startSpawn();
   landscape = new Landscape(ctx, camera);
   gameState.phase = PHASE.GAME;
@@ -56,6 +59,7 @@ const drawGameElements = (): void => {
   alienControl.draw();
   bulletControl.draw();
   score.draw();
+  lives.draw();
   drawVersionNumber();
 };
 

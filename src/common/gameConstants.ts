@@ -1,4 +1,4 @@
-export const VERSION_NUMBER: string = "0.4";
+export const VERSION_NUMBER: string = "0.5";
 
 export enum DIRECTION {
   Up = "UP",
@@ -15,6 +15,8 @@ export enum ACCELERATION_LEVELS {
 export enum SCORES {
   SHOOT_ALIEN = 1000,
 }
+
+export const STARTING_LIVES = 3;
 
 export const GAME_WIDTH: number = 1000;
 export const GAME_HEIGHT: number = 400;
@@ -40,6 +42,7 @@ export const COLOURS = {
 export const FONTS = {
   TITLE: "30px arial",
   SCORE: "20px arial",
+  LIVES: "20px arial",
   SMALL: "12px arial",
 };
 

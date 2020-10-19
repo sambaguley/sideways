@@ -22,6 +22,7 @@ const INITIAL_STATE = {
 enum SPRITE_STATES {
   FORWARD = "FORWARD",
   BACKWARD = "BACKWARD",
+  EXPLODE = "EXPLODE",
 }
 
 export default class Ship {
@@ -66,6 +67,19 @@ export default class Ship {
         this.ctx.drawImage(
           shipImage,
           this.width,
+          0,
+          this.width,
+          this.height,
+          this.x - this.camera.x,
+          this.y - this.camera.y,
+          this.width,
+          this.height
+        );
+        break;
+      case SPRITE_STATES.EXPLODE:
+        this.ctx.drawImage(
+          shipImage,
+          this.width * 2,
           0,
           this.width,
           this.height,
@@ -126,7 +140,7 @@ export default class Ship {
   };
 
   explode = () => {
-    this.y = -200;
+    this.spriteState = SPRITE_STATES.EXPLODE;
   };
 
   update = () => {

@@ -49,12 +49,12 @@ const detectKeyUpPress = (key: string): void => {
     if (key === INPUT.RIGHT && ship.moveDirection === DIRECTION.Right) {
       ship.setAcceleration(ACCELERATION_LEVELS.MIN);
       // camera.setAcceleration(ACCELERATION_LEVELS.MIN);
-      console.log("check");
+      // console.log("check");
     }
     if (key === INPUT.LEFT && ship.moveDirection === DIRECTION.Left) {
       ship.setAcceleration(ACCELERATION_LEVELS.MIN);
       // camera.setAcceleration(ACCELERATION_LEVELS.MIN);
-      console.log("check");
+      // console.log("check");
     }
   }
 };
