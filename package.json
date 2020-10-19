@@ -1,5 +1,5 @@
 {
-  "name": "table-tennis",
+  "name": "sideways",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -10,15 +10,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sambaguley/table-tennis.git"
+    "url": "git+https://github.com/sambaguley/sideways.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/sambaguley/table-tennis/issues"
+    "url": "https://github.com/sambaguley/sideways/issues"
   },
-  "homepage": "https://github.com/sambaguley/table-tennis#readme",
+  "homepage": "https://github.com/sambaguley/sideways#readme",
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^3.10.1",
     "@typescript-eslint/parser": "^3.10.1",
