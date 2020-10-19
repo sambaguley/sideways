@@ -123,8 +123,8 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.HTML_ELEMENTS = exports.PHASE = exports.INPUT = exports.FONTS = exports.COLOURS = exports.WIN_SCORE = exports.BAT_WIDTH = exports.BAT_HEIGHT = exports.BALL_RADIUS = exports.BAT_SIDE_MARGIN = exports.LANDSCAPE_MIN_X = exports.LANDSCAPE_MAX_X = exports.GAME_HEIGHT = exports.GAME_WIDTH = exports.SCORES = exports.DIRECTION = exports.VERSION_NUMBER = void 0;
-exports.VERSION_NUMBER = "0.3";
+exports.HTML_ELEMENTS = exports.PHASE = exports.INPUT = exports.FONTS = exports.COLOURS = exports.WIN_SCORE = exports.BAT_WIDTH = exports.BAT_HEIGHT = exports.BALL_RADIUS = exports.BAT_SIDE_MARGIN = exports.LANDSCAPE_MIN_X = exports.LANDSCAPE_MAX_X = exports.GAME_HEIGHT = exports.GAME_WIDTH = exports.STARTING_LIVES = exports.SCORES = exports.ACCELERATION_LEVELS = exports.DIRECTION = exports.VERSION_NUMBER = void 0;
+exports.VERSION_NUMBER = "0.5";
 var DIRECTION;
 
 (function (DIRECTION) {
@@ -134,12 +134,20 @@ var DIRECTION;
   DIRECTION["Right"] = "RIGHT";
 })(DIRECTION = exports.DIRECTION || (exports.DIRECTION = {}));
 
+var ACCELERATION_LEVELS;
+
+(function (ACCELERATION_LEVELS) {
+  ACCELERATION_LEVELS[ACCELERATION_LEVELS["MIN"] = 0] = "MIN";
+  ACCELERATION_LEVELS[ACCELERATION_LEVELS["MAX"] = 0.8] = "MAX";
+})(ACCELERATION_LEVELS = exports.ACCELERATION_LEVELS || (exports.ACCELERATION_LEVELS = {}));
+
 var SCORES;
 
 (function (SCORES) {
   SCORES[SCORES["SHOOT_ALIEN"] = 1000] = "SHOOT_ALIEN";
 })(SCORES = exports.SCORES || (exports.SCORES = {}));
 
+exports.STARTING_LIVES = 3;
 exports.GAME_WIDTH = 1000;
 exports.GAME_HEIGHT = 400;
 exports.LANDSCAPE_MAX_X = 2650;
@@ -159,6 +167,7 @@ exports.COLOURS = {
 exports.FONTS = {
   TITLE: "30px arial",
   SCORE: "20px arial",
+  LIVES: "20px arial",
   SMALL: "12px arial"
 };
 exports.INPUT = {
@@ -3132,22 +3141,22 @@ var detectKeyDownPress = function detectKeyDownPress(key) {
     switch (key) {
       // SHIP
       case gameConstants_1.INPUT.UP:
-        gameControl_1.ship.setSpeed("max");
+        gameControl_1.ship.setAcceleration(gameConstants_1.ACCELERATION_LEVELS.MAX);
         gameControl_1.ship.changeDirection(gameConstants_1.DIRECTION.Up);
         break;
 
       case gameConstants_1.INPUT.DOWN:
-        gameControl_1.ship.setSpeed("max");
+        gameControl_1.ship.setAcceleration(gameConstants_1.ACCELERATION_LEVELS.MAX);
         gameControl_1.ship.changeDirection(gameConstants_1.DIRECTION.Down);
         break;
 
       case gameConstants_1.INPUT.RIGHT:
-        gameControl_1.ship.setSpeed("max");
+        gameControl_1.ship.setAcceleration(gameConstants_1.ACCELERATION_LEVELS.MAX);
         gameControl_1.ship.changeDirection(gameConstants_1.DIRECTION.Right);
         break;
 
       case gameConstants_1.INPUT.LEFT:
-        gameControl_1.ship.setSpeed("max");
+        gameControl_1.ship.setAcceleration(gameConstants_1.ACCELERATION_LEVELS.MAX);
         gameControl_1.ship.changeDirection(gameConstants_1.DIRECTION.Left);
         break;
 
@@ -3161,19 +3170,21 @@ var detectKeyDownPress = function detectKeyDownPress(key) {
 var detectKeyUpPress = function detectKeyUpPress(key) {
   if (gameState_1.gameState.phase == gameConstants_1.PHASE.GAME) {
     if (key === gameConstants_1.INPUT.UP && gameControl_1.ship.moveDirection === gameConstants_1.DIRECTION.Up) {
-      gameControl_1.ship.stop();
+      gameControl_1.ship.setAcceleration(gameConstants_1.ACCELERATION_LEVELS.MIN); // camera.setAcceleration(ACCELERATION_LEVELS.MIN);
     }
 
     if (key === gameConstants_1.INPUT.DOWN && gameControl_1.ship.moveDirection === gameConstants_1.DIRECTION.Down) {
-      gameControl_1.ship.stop();
+      gameControl_1.ship.setAcceleration(gameConstants_1.ACCELERATION_LEVELS.MIN); // camera.setAcceleration(ACCELERATION_LEVELS.MIN);
     }
 
     if (key === gameConstants_1.INPUT.RIGHT && gameControl_1.ship.moveDirection === gameConstants_1.DIRECTION.Right) {
-      gameControl_1.ship.stop();
+      gameControl_1.ship.setAcceleration(gameConstants_1.ACCELERATION_LEVELS.MIN); // camera.setAcceleration(ACCELERATION_LEVELS.MIN);
+      // console.log("check");
     }
 
     if (key === gameConstants_1.INPUT.LEFT && gameControl_1.ship.moveDirection === gameConstants_1.DIRECTION.Left) {
-      gameControl_1.ship.stop();
+      gameControl_1.ship.setAcceleration(gameConstants_1.ACCELERATION_LEVELS.MIN); // camera.setAcceleration(ACCELERATION_LEVELS.MIN);
+      // console.log("check");
     }
   }
 };
@@ -3206,7 +3217,8 @@ exports.TEXT = void 0;
 exports.TEXT = {
   WIN: "YOU WIN!!!",
   LOSE: "YOU LOSE!!!",
-  SCORE: "SCORE"
+  SCORE: "SCORE",
+  LIVES: "LIVES"
 };
 },{}],"collision/collision.ts":[function(require,module,exports) {
 "use strict";
@@ -3248,8 +3260,13 @@ exports.collisionDetection = function () {
     if (isCollide(gameControl_1.ship, alien)) {
       alien.explode();
       gameControl_1.ship.explode();
-      gameControl_1.stopAnimation();
-      screenControl_1.showEndScreen();
+      gameControl_1.lives.decrease();
+
+      if (gameControl_1.lives.lives < 1) {
+        gameControl_1.stopAnimation();
+        screenControl_1.showEndScreen();
+      }
+
       htmlElements_1.scoreResult.innerHTML = gameText_1.TEXT.SCORE + ": " + gameControl_1.score.score;
     }
   });
@@ -3281,6 +3298,7 @@ var SPRITE_STATES;
 (function (SPRITE_STATES) {
   SPRITE_STATES["FORWARD"] = "FORWARD";
   SPRITE_STATES["BACKWARD"] = "BACKWARD";
+  SPRITE_STATES["EXPLODE"] = "EXPLODE";
 })(SPRITE_STATES || (SPRITE_STATES = {}));
 
 var Ship =
@@ -3291,8 +3309,9 @@ function () {
 
     this.height = 23;
     this.width = 60;
-    this.acceleration = 0.2;
-    this.maxSpeed = 6;
+    this._acceleration = 0;
+    this._friction = 0.4;
+    this.maxSpeed = 8;
     this.x = INITIAL_STATE.x;
     this.y = INITIAL_STATE.y;
     this.speed = INITIAL_STATE.speed;
@@ -3317,15 +3336,14 @@ function () {
 
           break;
 
+        case SPRITE_STATES.EXPLODE:
+          _this.ctx.drawImage(htmlElements_1.shipImage, _this.width * 2, 0, _this.width, _this.height, _this.x - _this.camera.x, _this.y - _this.camera.y, _this.width, _this.height);
+
+          break;
+
         default:
           break;
-      } // ctx.fillStyle = COLOURS.MAIN;
-      // ctx.beginPath();
-      // ctx.moveTo(this.x, this.y);
-      // ctx.lineTo(this.x + this.width, this.y + this.height / 2);
-      // ctx.lineTo(this.x, this.y + this.height);
-      // ctx.fill();
-
+      }
     };
 
     this.reset = function () {
@@ -3363,57 +3381,58 @@ function () {
     };
 
     this.explode = function () {
-      _this.y = -200;
+      _this.spriteState = SPRITE_STATES.EXPLODE;
     };
 
-    this.move = function () {
-      switch (_this.moveDirection) {
-        case gameConstants_1.DIRECTION.Up:
-          if (_this.y > 0) {
-            _this.y = _this.y - _this.speed;
-          }
+    this.update = function () {
+      // Speed should always 0 or above and not exceed the top speed
+      _this.speed = Math.min(Math.max(_this.speed + _this._acceleration - _this._friction, 0), _this.maxSpeed);
 
-          break;
-
-        case gameConstants_1.DIRECTION.Down:
-          if (_this.y < gameConstants_1.GAME_HEIGHT - 24) {
-            _this.y = _this.y + _this.speed;
-          }
-
-          break;
-
-        case gameConstants_1.DIRECTION.Left:
-          if (_this.x > gameConstants_1.LANDSCAPE_MIN_X) {
-            if (_this.x - _this.camera.x - _this.margin > 0) {
-              _this.x = _this.x - _this.speed;
-              _this.spriteState = SPRITE_STATES.BACKWARD;
-            } else {
-              _this.x = _this.x - _this.speed;
-              _this.spriteState = SPRITE_STATES.BACKWARD;
-
-              _this.camera.move(gameConstants_1.DIRECTION.Right);
+      if (_this.speed > 0) {
+        switch (_this.moveDirection) {
+          case gameConstants_1.DIRECTION.Up:
+            if (_this.y > 0) {
+              _this.y = _this.y - _this.speed;
             }
-          }
 
-          break;
+            break;
 
-        case gameConstants_1.DIRECTION.Right:
-          if (_this.x < gameConstants_1.LANDSCAPE_MAX_X) {
-            if (_this.x - _this.camera.x + _this.margin < gameConstants_1.GAME_WIDTH - _this.width) {
-              _this.x = _this.x + _this.speed;
-              _this.spriteState = SPRITE_STATES.FORWARD;
-            } else {
-              _this.x = _this.x + _this.speed;
-              _this.spriteState = SPRITE_STATES.FORWARD;
-
-              _this.camera.move(gameConstants_1.DIRECTION.Left);
+          case gameConstants_1.DIRECTION.Down:
+            if (_this.y < gameConstants_1.GAME_HEIGHT - 24) {
+              _this.y = _this.y + _this.speed;
             }
-          }
 
-          break;
+            break;
 
-        default:
-          break;
+          case gameConstants_1.DIRECTION.Left:
+            _this.spriteState = SPRITE_STATES.BACKWARD;
+
+            if (_this.x > gameConstants_1.LANDSCAPE_MIN_X) {
+              _this.x = _this.x - _this.speed;
+
+              if (_this.x - _this.camera.x - _this.margin < 0) {
+                _this.camera.followShip(-_this.speed);
+              }
+            }
+
+            break;
+
+          case gameConstants_1.DIRECTION.Right:
+            _this.spriteState = SPRITE_STATES.FORWARD;
+
+            if (_this.x < gameConstants_1.LANDSCAPE_MAX_X) {
+              _this.x = _this.x + _this.speed;
+
+              if (_this.x - _this.camera.x + _this.margin > gameConstants_1.GAME_WIDTH - _this.width) {
+                _this.camera.followShip(_this.speed);
+              }
+            }
+
+            break;
+
+          default:
+            break;
+        }
       }
     };
 
@@ -3424,6 +3443,10 @@ function () {
     this.ctx = ctx;
     this.camera = camera;
   }
+
+  Ship.prototype.setAcceleration = function (newAcc) {
+    this._acceleration = newAcc;
+  };
 
   return Ship;
 }();
@@ -3448,6 +3471,8 @@ function () {
     this.lineWidth = 2;
     this.ctx = null;
     this.camera = null;
+    this.numberOfStars = 100;
+    this.stars = [];
 
     this.mountain = function (currentX, size) {
       var mountainSideWidth = size;
@@ -3458,6 +3483,8 @@ function () {
       _this.ctx.lineTo(currentX + mountainSideWidth, _this.landscapeBaseline - mountainHeight);
 
       _this.ctx.lineTo(currentX + 2 * mountainSideWidth, _this.landscapeBaseline);
+
+      _this.ctx.fill();
 
       return currentX + size * 2;
     };
@@ -3472,14 +3499,31 @@ function () {
       return currentX + length;
     };
 
+    this.star = function (starNumber) {
+      var _a;
+
+      var _b = (_a = _this.stars[starNumber]) !== null && _a !== void 0 ? _a : [0, 0],
+          x = _b[0],
+          y = _b[1];
+
+      _this.ctx.fillRect(x - _this.camera.x, y, 2, 2);
+    };
+
     this.draw = function () {
       var currentX = 0;
+      _this.ctx.fillStyle = gameConstants_1.COLOURS.LANDSCAPE;
       _this.ctx.strokeStyle = gameConstants_1.COLOURS.LANDSCAPE;
       _this.ctx.lineWidth = _this.lineWidth;
 
+      for (var i = 1; i < _this.numberOfStars; i++) {
+        _this.star(i);
+      }
+
+      _this.ctx.fillStyle = gameConstants_1.COLOURS.BACKGROUND;
+
       _this.ctx.beginPath();
 
-      _this.ctx.moveTo(-_this.camera.x, _this.landscapeBaseline);
+      _this.ctx.moveTo(0, _this.landscapeBaseline);
 
       currentX = 200 - _this.camera.x;
 
@@ -3500,11 +3544,22 @@ function () {
         currentX = _this.mountain(currentX, 100);
       }
 
+      _this.ctx.lineTo(gameConstants_1.LANDSCAPE_MAX_X, _this.landscapeBaseline);
+
+      _this.ctx.fillRect(0, _this.landscapeBaseline, gameConstants_1.GAME_WIDTH, gameConstants_1.GAME_HEIGHT);
+
       _this.ctx.stroke();
     };
 
     this.ctx = ctx;
     this.camera = camera;
+
+    for (var i = 1; i < this.numberOfStars; i++) {
+      // console.log("test");
+      var starX = Math.random() * gameConstants_1.LANDSCAPE_MAX_X - this.camera.x;
+      var starY = Math.random() * gameConstants_1.GAME_HEIGHT;
+      this.stars.push([starX, starY]);
+    }
   }
 
   return Landscape;
@@ -3652,7 +3707,7 @@ var gameConstants_1 = require("../common/gameConstants");
 
 var INITIAL_STATE = {
   x: gameConstants_1.LANDSCAPE_MAX_X,
-  speed: 3,
+  speed: 0.5,
   maxSpeed: 8,
   direction: gameConstants_1.DIRECTION.Right
 };
@@ -3666,7 +3721,7 @@ function () {
     this.height = 23;
     this.width = 26;
     this.x = Math.random() * gameConstants_1.LANDSCAPE_MAX_X;
-    this.y = Math.random() * gameConstants_1.GAME_HEIGHT / 2;
+    this.y = -10;
     this.speed = INITIAL_STATE.speed;
     this.direction = gameConstants_1.DIRECTION.Right;
     this.moveDirection = null;
@@ -3679,13 +3734,17 @@ function () {
     };
 
     this.spawn = function () {
-      _this.x = gameConstants_1.LANDSCAPE_MAX_X;
-      _this.y = Math.random() * gameConstants_1.GAME_HEIGHT / 2;
+      _this.x = Math.random() * gameConstants_1.GAME_WIDTH / 2;
+      _this.y = -10;
       _this.speed = INITIAL_STATE.speed;
     };
 
-    this.move = function () {
-      _this.x = _this.x - _this.speed;
+    this.update = function () {
+      _this.y = _this.y + _this.speed;
+
+      if (_this.y > gameConstants_1.GAME_HEIGHT) {
+        _this.remove();
+      }
     };
 
     this.explode = function () {
@@ -3744,9 +3803,9 @@ function () {
       _this.alienList.push(new alien_1.default(_this.ctx, _this.camera));
     };
 
-    this.move = function () {
+    this.update = function () {
       _this.alienList.forEach(function (alien) {
-        alien.move();
+        alien.update();
 
         if (alien.x - _this.camera.x < 0) {
           alien.remove();
@@ -3779,8 +3838,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var gameConstants_1 = require("../common/gameConstants");
-
 var Camera =
 /** @class */
 function () {
@@ -3791,20 +3848,16 @@ function () {
     this.y = 0;
     this.minX = 0;
     this.maxX = 1700;
-    this.speed = 8;
+    this.speed = 0;
+    this.maxSpeed = 8;
+    this.direction = null;
 
-    this.move = function (direction) {
-      if (direction === gameConstants_1.DIRECTION.Left) {
-        if (_this.x < _this.maxX) {
-          _this.x = _this.x + _this.speed;
-        }
-      }
+    this.setDirection = function (newDirection) {
+      _this.direction = newDirection;
+    };
 
-      if (direction === gameConstants_1.DIRECTION.Right) {
-        if (_this.x > _this.minX) {
-          _this.x = _this.x - _this.speed;
-        }
-      }
+    this.followShip = function (followX) {
+      _this.x = _this.x + followX;
     };
 
     this.x = x;
@@ -3815,7 +3868,7 @@ function () {
 }();
 
 exports.default = Camera;
-},{"../common/gameConstants":"common/gameConstants.ts"}],"gameControl/score.ts":[function(require,module,exports) {
+},{}],"gameControl/score.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3854,6 +3907,45 @@ function () {
 }();
 
 exports.default = Score;
+},{"../common/gameConstants":"common/gameConstants.ts","../common/gameText":"common/gameText.ts"}],"gameControl/lives.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var gameConstants_1 = require("../common/gameConstants");
+
+var gameText_1 = require("../common/gameText");
+
+var Lives =
+/** @class */
+function () {
+  function Lives(ctx) {
+    var _this = this;
+
+    this.lives = gameConstants_1.STARTING_LIVES;
+    this.ctx = null;
+
+    this.decrease = function () {
+      _this.lives -= 1;
+    };
+
+    this.draw = function () {
+      _this.ctx.fillStyle = gameConstants_1.COLOURS.white;
+      _this.ctx.font = gameConstants_1.FONTS.LIVES;
+      _this.ctx.textAlign = "left";
+
+      _this.ctx.fillText(gameText_1.TEXT.LIVES + ": " + _this.lives.toString(), 20, 40);
+    };
+
+    this.ctx = ctx;
+  }
+
+  return Lives;
+}();
+
+exports.default = Lives;
 },{"../common/gameConstants":"common/gameConstants.ts","../common/gameText":"common/gameText.ts"}],"elements/background.ts":[function(require,module,exports) {
 "use strict";
 
@@ -3893,7 +3985,7 @@ var __importDefault = this && this.__importDefault || function (mod) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.stopAnimation = exports.init = exports.alienControl = exports.bulletControl = exports.camera = exports.ctx = exports.landscape = exports.bullet = exports.alien = exports.ship = exports.score = void 0;
+exports.stopAnimation = exports.init = exports.alienControl = exports.bulletControl = exports.camera = exports.ctx = exports.landscape = exports.bullet = exports.alien = exports.ship = exports.lives = exports.score = void 0;
 
 var gameConstants_1 = require("../common/gameConstants");
 
@@ -3920,6 +4012,8 @@ var camera_1 = __importDefault(require("../camera/camera"));
 
 var score_1 = __importDefault(require("./score"));
 
+var lives_1 = __importDefault(require("./lives"));
+
 var background_1 = require("../elements/background"); // import { drawScore, checkScores } from "./score";
 
 
@@ -3933,6 +4027,7 @@ exports.init = function () {
   exports.bulletControl = new bulletControl_1.default(exports.ctx, exports.camera);
   exports.alienControl = new alienControl_1.default(exports.ctx, exports.camera);
   exports.score = new score_1.default(exports.ctx);
+  exports.lives = new lives_1.default(exports.ctx);
   exports.alienControl.startSpawn();
   exports.landscape = new landscape_1.default(exports.ctx, exports.camera);
   gameState_1.gameState.phase = gameConstants_1.PHASE.GAME;
@@ -3950,12 +4045,13 @@ var drawGameElements = function drawGameElements() {
   exports.alienControl.draw();
   exports.bulletControl.draw();
   exports.score.draw();
+  exports.lives.draw();
   background_1.drawVersionNumber();
 };
 
 var gameLoop = function gameLoop() {
-  exports.ship.move();
-  exports.alienControl.move();
+  exports.ship.update();
+  exports.alienControl.update();
   exports.bulletControl.move();
   drawGameElements();
   collision_1.collisionDetection(); // checkScores();
@@ -3973,7 +4069,7 @@ exports.stopAnimation = function () {
 };
 
 userInput_1.initUserInput();
-},{"../common/gameConstants":"common/gameConstants.ts","../common/htmlElements":"common/htmlElements.ts","./userInput":"gameControl/userInput.ts","./gameState":"gameControl/gameState.ts","../collision/collision":"collision/collision.ts","../elements/ship":"elements/ship.ts","../elements/landscape":"elements/landscape.ts","../elements/bullet":"elements/bullet.ts","../elements/bulletControl":"elements/bulletControl.ts","../elements/alienControl":"elements/alienControl.ts","../camera/camera":"camera/camera.ts","./score":"gameControl/score.ts","../elements/background":"elements/background.ts"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"../common/gameConstants":"common/gameConstants.ts","../common/htmlElements":"common/htmlElements.ts","./userInput":"gameControl/userInput.ts","./gameState":"gameControl/gameState.ts","../collision/collision":"collision/collision.ts","../elements/ship":"elements/ship.ts","../elements/landscape":"elements/landscape.ts","../elements/bullet":"elements/bullet.ts","../elements/bulletControl":"elements/bulletControl.ts","../elements/alienControl":"elements/alienControl.ts","../camera/camera":"camera/camera.ts","./score":"gameControl/score.ts","./lives":"gameControl/lives.ts","../elements/background":"elements/background.ts"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -4001,7 +4097,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56701" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59892" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
