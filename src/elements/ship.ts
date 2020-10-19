@@ -23,11 +23,17 @@ enum SPRITE_STATES {
   BACKWARD = "BACKWARD",
 }
 
+export enum ACCELERATION_LEVELS {
+  MIN = 0,
+  MAX = 0.8,
+}
+
 export default class Ship {
   height = 23;
   width = 60;
-  acceleration = 0.2;
-  maxSpeed = 6;
+  private _acceleration = 0;
+  _friction = 0.4;
+  maxSpeed = 8;
   x = INITIAL_STATE.x;
   y = INITIAL_STATE.y;
   speed = INITIAL_STATE.speed;
@@ -99,6 +105,10 @@ export default class Ship {
     }
   };
 
+  setAcceleration(newAcc) {
+    this._acceleration = newAcc;
+  }
+
   changeDirection = (newDirection: DIRECTION) => {
     this.moveDirection = newDirection;
     if (newDirection === DIRECTION.Right || newDirection === DIRECTION.Left) {
@@ -130,7 +140,12 @@ export default class Ship {
     this.y = -200;
   };
 
-  move = () => {
+  update = () => {
+    // Speed should always 0 or above and not exceed the top speed
+    this.speed = Math.min(
+      Math.max(this.speed + this._acceleration - this._friction, 0),
+      this.maxSpeed
+    );
     switch (this.moveDirection) {
       case DIRECTION.Up:
         if (this.y > 0) {

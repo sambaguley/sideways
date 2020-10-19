@@ -60,7 +60,7 @@ const drawGameElements = (): void => {
 };
 
 const gameLoop = (): void => {
-  ship.move();
+  ship.update();
   alienControl.move();
   bulletControl.move();
   drawGameElements();
